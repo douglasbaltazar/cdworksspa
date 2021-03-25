@@ -1,12 +1,25 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view/>
+    <main>
+      <NavMain />
+    <router-view />
+    </main>
+    <FooterMain />
   </div>
 </template>
+
+<script>
+import NavMain from "@/components/NavMain.vue"
+import FooterMain from "@/components/FooterMain.vue"
+
+export default {
+  components: {
+    NavMain,
+    FooterMain
+  }
+}
+</script>
+
 
 <style>
 #app {
@@ -16,17 +29,8 @@
   text-align: center;
   color: #2c3e50;
 }
-
-#nav {
-  padding: 30px;
-}
-
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-#nav a.router-link-exact-active {
-  color: #42b983;
+main {
+  min-height: calc(100vh - 100px);
+  margin-bottom: 35px;
 }
 </style>
