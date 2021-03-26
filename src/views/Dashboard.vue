@@ -25,8 +25,8 @@
                   id="checkbox-my-jobs"
                   v-model="filters.myJobs"
                   name="myJobs"
-                  value="true"
-                  unchecked-value="false"
+                  :value="true"
+                  :unchecked-value="false"
                 >
                   Meus Projetos
                 </b-form-checkbox>
@@ -44,79 +44,42 @@
         </b-card>
       </div>
       <div class="col-12 col-sm-8 col-md-9 lista">
-          <b-button class="float-right my-2" @click="() => $router.push('./jobs/new')" variant="success">Novo projeto</b-button>
-          <h3>Projetos</h3>
-          <hr>
-          <div v-if="jobs && jobs.length > 0">
-              <b-card v-for="job in jobs" :key="job.id" :title="job.title" :sub-title="job.Hirer.name" class="my-2" bg-variant="light">
-                  <b-card-text>{{job.description}}</b-card-text>
-                  <div class="row">
-                      <div class="col-6">
-                          <strong>Orçamento</strong>
-                          R$ {{job.budget}}
-                      </div>
-                      <div class="col-6">
-                          <strong>Propostas até: </strong>
-                          {{job.deadline}}
-                      </div>
-                  </div>
-                  <div class="text-right">
-                      <hr>
-                      <b-button variant="primary">Mais detalhes...</b-button>
-                  </div>
-              </b-card>
-              <div class="actions text-center" v-if="pagination.count > 0">
-                  <b-button variant="primary" @click="previous()" class="mr-2">Anterior</b-button>
-                  <b-button variant="primary" @click="next()">Próximo</b-button>
-              <p class="text-muted"><small>Do projeto PRIMEIRO_REGISTRO até ÚLTIMO_REGISTRO - Total de TOTAL_REGISTROS projetos</small></p>
-              </div>
-          </div>
-          <div v-else>
-              <span class="text-muted">Nenhum projeto encontrado...</span>
-          </div>
+        <b-button
+          class="float-right my-2"
+          @click="() => $router.push('./jobs/new')"
+          variant="success"
+          >Novo projeto</b-button
+        >
+        <h3>Projetos</h3>
+        <hr>
+        <div v-if="jobs && jobs.length > 0">
+          <JobCard v-for="job in jobs" :key="job.id" :job="job">
+              <template slot="actions">
+                  <b-button variant="primary">Mais detalhes</b-button>
+              </template>
+          </JobCard>
+          <Pagination :pagination="pagination" @onPreviousClick="search" @onNextClick="search" />
+        </div>
+        <div v-else>
+          <span class="text-muted">Nenhum projeto encontrado...</span>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import { apiProtected } from "../services/apiService";
+import JobCard from "../components/JobCard"
+import Pagination from "../components/Pagination"
 export default {
+    components: {
+        JobCard,
+        Pagination
+    },
   data() {
     return {
-      jobs: [
-          {
-                id: 4,
-                userId: 4,
-                title:"Terste",
-                description: "Teste teste teste",
-                budget: 12345,
-                deadline: "2019-10-26T12:21:04.000Z",
-                selectedApplicationId: 2,
-                createdAt: "2019-10-26T15:07:04.000Z",
-                updatedAt: "2019-10-27T12:48:04.000Z",
-                user_id: 4,
-                Hirer: {
-                    id: 4,
-                    name: "Contratante",
-                    description: null,
-                    pic: null,
-                    email: "contratante@gmail.com",
-                    password: "asdasd",
-                    createdAt: "2019-10-26T15:07:04.000Z",
-                    updatedAt: "2019-10-27T12:48:04.000Z",
-                },
-                Skills: [
-                    {
-                        id: 15,
-                        name: "JavaScript",
-                        jobs_skills: {
-                            createdAt: "2019-10-26T15:07:04.000Z",
-                            updatedAt: "2019-10-27T12:48:04.000Z",
-                        }
-                    }
-                ]
-          }
-      ],
+      jobs: [],
       filters: {
         title: "",
         myJobs: false,
@@ -127,6 +90,46 @@ export default {
         count: 0,
       },
     };
+  },
+  methods: {
+    async search() {
+      try {
+        this.jobs = null;
+        const params = {};
+        if (this.filters.title) {
+          params.title = this.filters.title;
+        }
+        if (this.filters.myJobs) {
+          params.userId = this.$store.user.id;
+        }
+        params.limit = this.pagination.limit;
+        params.offset = this.pagination.offset;
+        const response = await apiProtected.get("/jobs", {
+          params,
+        });
+        this.jobs = response.data.data;
+        this.pagination = response.data.meta;
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    onSubmit() {
+      this.pagination = {
+        offset: 0,
+        limit: 5,
+        count: 0,
+      };
+      this.search();
+    },
+    onReset() {
+      this.filters = {
+        title: "",
+        myJobs: false,
+      };
+    },
+  },
+  mounted() {
+    this.search();
   },
 };
 </script>
