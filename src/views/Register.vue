@@ -123,6 +123,7 @@ export default {
         password: null,
         passwordConfirmation: null,
       };
+      this.errorReset();
     },
     errorReset() {
       this.error = {
