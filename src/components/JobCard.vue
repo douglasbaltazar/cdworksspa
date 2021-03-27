@@ -15,10 +15,18 @@
         <strong>Propostas até: </strong>
         {{ job.deadline | date}}
       </div>
+      <div class="col-12 mt-2">
+        <h5>Habilidades exigidas</h5>
+        <div class="row">
+          <div class="col-6 col-sm-4 col-lg-3" v-for="skill in job.Skills" :key="skill.id">
+            {{skill.name}}
+          </div>
+        </div>
+      </div>
     </div>
     <div class="text-right">
       <hr />
-      <slot name="actons"></slot>
+      <slot name="actions"></slot>
     </div>
   </b-card>
 </template>

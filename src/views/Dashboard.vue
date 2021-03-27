@@ -55,7 +55,7 @@
         <div v-if="jobs && jobs.length > 0">
           <JobCard v-for="job in jobs" :key="job.id" :job="job">
               <template slot="actions">
-                  <b-button variant="primary">Mais detalhes</b-button>
+                  <b-button variant="primary" @click="() => $router.push(`./jobs/${job.id}/show`)">Mais detalhes</b-button>
               </template>
           </JobCard>
           <Pagination :pagination="pagination" @onPreviousClick="search" @onNextClick="search" />
@@ -100,7 +100,7 @@ export default {
           params.title = this.filters.title;
         }
         if (this.filters.myJobs) {
-          params.userId = this.$store.user.id;
+          params.userId = this.$store.state.user.id;
         }
         params.limit = this.pagination.limit;
         params.offset = this.pagination.offset;
