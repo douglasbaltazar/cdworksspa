@@ -24,6 +24,28 @@ const routes = [
     path: '/dashboard',
     name: 'dashboard',
     component: () => import('../views/Dashboard.vue')
+  },
+  {
+    path: '/profile/:userId',
+    component: () => import('../views/Profile.vue'),
+    children: [
+      {
+        path: '',
+        component: () => import('../views/parts/ProfileHome.vue')
+      },
+      {
+        path: 'pic',
+        component: () => import('../views/parts/ProfilePics.vue')
+      },
+      {
+        path: 'portfolios',
+        component: () => import('../views/parts/ProfilePortfolios.vue')
+      },
+      {
+        path: 'skills',
+        component: () => import('../views/parts/ProfileSkills.vue')
+      },
+    ]
   }
 ]
 

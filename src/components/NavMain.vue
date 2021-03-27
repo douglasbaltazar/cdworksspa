@@ -19,7 +19,7 @@
                 <template v-slot:button-content>
                   <em>{{username}}</em>
                 </template>
-                <b-dropdown-item @click="$router.push('/profile/1')">Perfil</b-dropdown-item>
+                <b-dropdown-item @click="$router.push('/profile/'+userId)">Perfil</b-dropdown-item>
                 <b-dropdown-item @click="logout()">Sair</b-dropdown-item>
               </b-nav-item-dropdown>
             </b-navbar-nav>
@@ -42,6 +42,9 @@ export default {
       },
       username() {
         return this.$store.state.user.email
+      },
+      userId() {
+        return this.$store.state.user.id
       }
     }
 }

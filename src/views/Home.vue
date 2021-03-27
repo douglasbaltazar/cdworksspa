@@ -1,12 +1,12 @@
 <template>
-  <div class="home text-center">
+  <div class="home">
     <b-jumbotron header="CDWorks" lead="Os melhores programadores estão aqui!">
       <p>
         Coloque os seus projetos de desenvolvimento de software na mão de quem
         sabe o que faz.
       </p>
-      <p-button variant="primary" @click="$router.push('/register')"
-        >Mais Informações</p-button
+      <b-button variant="primary" @click="$router.push('/register')"
+        >Mais Informações</b-button
       >
     </b-jumbotron>
     <div class="container">
